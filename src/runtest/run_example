@@ -1,0 +1,26 @@
+#!/bin/bash
+
+rm -f simple_example_out.slcio
+rm -f simple_example_out.root
+
+#ddsim  --runType run  --enableG4GPS \
+#   --macroFile gps.mac \
+#   --compactFile detectors/SiD/slic/sieic3/sieic3_compact.xml \
+#   --outputFile slic_ddsim_out.slcio
+
+#ddsim  --runType run  --enableG4GPS \
+#   --macroFile gps.mac \
+#   --compactFile detectors/SiD/compact/sid_working/sidloi3_v00.xml \
+#   --outputFile example1_ddsim_out.slcio
+
+ddsim  --runType run  --enableG4GPS \
+   --macroFile gps.mac \
+   --compactFile compact/simple_example.xml \
+   --outputFile simple_example_out.root
+
+#anajob example1_ddsim_out.slcio | tail -n 30 > collections.txt
+
+#rm outputfile.slcio
+#Marlin steering_files/basicsteering.xml
+#
+#anajob outputfile.slcio | tail -n 30 > collections2.txt

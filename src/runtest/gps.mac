@@ -1,0 +1,21 @@
+/control/verbose 2
+/run/initialize
+
+/gps/verbose 2
+/gps/particle e-
+/gps/number 1
+
+/gps/ene/type Gauss
+/gps/ene/mono 20.0 GeV
+/gps/ene/sigma 1. GeV
+
+#/gps/position 0 0 0
+/gps/pos/type Volume
+/gps/pos/shape Cylinder
+/gps/pos/centre 0. 0. 0. cm
+/gps/pos/radius 2.0 cm
+/gps/pos/halfz  1.0 m
+
+/gps/ang/type iso
+
+/run/beamOn 10
