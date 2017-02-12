@@ -1,0 +1,103 @@
+<lccdd>
+    <info name="simple_exaple"
+       title="A most basic example of DD4hep"
+       author="Whitney Armstrong"
+       url=""
+       status="development"
+       version="0">
+        <comment>
+          A simple example of a single detector system consisting of a few tracking planes
+	</comment>         
+    </info>
+ 
+    <define>
+        <constant name="world_side"             value="10*m"/>
+        <constant name="world_x"                value="world_side/2"/>
+        <constant name="world_y"                value="world_side/2"/>
+        <constant name="world_z"                value="world_side/2"/>        
+
+        <constant name="tracker_region_rmax"  value="2.0*m"/>
+        <constant name="tracker_region_zmax"  value="2.0*m"/>
+
+	<constant name="SolenoidField_zMax"         value="4.0*m"/>
+	<constant name="SolenoidField_outer_radius" value="4.0*m"/>
+
+	<constant name="BField_nominal" value="4.0*tesla"/>
+
+    </define>
+
+    <includes>
+      <gdmlFile  ref="elements.xml"/>
+      <gdmlFile  ref="materials.xml"/>
+    </includes>
+ 
+    <limits>
+      <limitset name="Tracker_limits">
+        <limit name="step_length_max" particles="*" value="5.0" unit="mm" />
+      </limitset>
+    </limits>
+    
+    <display>
+      <vis name="VXDLayerVis"   alpha="1.0" r="0.5" g=".5"  b=".5"   showDaughters="true"  visible="true"/>
+      <vis name="VXDSupportVis" alpha="1.0" r="0.0" g="1.0" b="0.0"  showDaughters="true"  visible="true"/>
+      <vis name="SITSupportVis" alpha="1.0" r="0.0" g="0.3" b="0.7"  showDaughters="true"  visible="true"/>
+      <vis name="SITLayerVis"   alpha="1.0" r="0.0" g="0.7" b="0.3"  showDaughters="true"  visible="true"/>
+      <vis name="SupportVis"   alpha="0.4" r="0.0" g="0.7" b="0.3"  showDaughters="true"  visible="true"/>
+      <vis name="SiVis"        alpha="0.7" r="0.3" g="0.0" b="0.3"  showDaughters="true"  visible="true"/>
+    </display>
+
+    <detectors>
+      <comment>Trackers</comment>
+      
+      <detector 
+        name="TrackerPlanes" 
+        type="PlaneTracker" 
+        vis="VXDVis" 
+        id="1" 
+        limits="Tracker_limits" 
+        readout="TPCollection" 
+        insideTrackingVolume="true">
+
+        <layer z_offset="10*cm" id="0">
+          <module name="SinglePlane" thickness="1*cm" x_half="100*cm" y_half="100*cm" material="CarbonFiber" vis="SupportVis" /> 
+          <sensitive thickness="0.1*mm" material="G4_Si" vis="SiVis"  />	
+        </layer>																                                 
+        <layer z_offset="20*cm" id="1">
+          <module name="SinglePlane1" thickness="1*cm" x_half="100*cm" y_half="100*cm" material="CarbonFiber" vis="SupportVis" /> 
+          <sensitive thickness="0.1*mm" material="G4_Si" vis="SiVis"  />	
+        </layer>																                                 
+        <layer z_offset="40*cm" id="2">
+          <module name="SinglePlane2" thickness="1*cm" x_half="100*cm" y_half="100*cm" material="CarbonFiber" vis="SupportVis" /> 
+          <sensitive thickness="0.1*mm" material="G4_Si" vis="SiVis"  />	
+        </layer>																                                 
+        <layer z_offset="70*cm" id="3">
+          <module name="SinglePlane3" thickness="1*cm" x_half="100*cm" y_half="100*cm" material="CarbonFiber" vis="SupportVis" /> 
+          <sensitive thickness="0.1*mm" material="G4_Si" vis="SiVis"  />	
+        </layer>																                                 
+        <layer z_offset="100*cm" id="4">
+          <module name="SinglePlane4" thickness="1*cm" x_half="100*cm" y_half="100*cm" material="CarbonFiber" vis="SupportVis" /> 
+          <sensitive thickness="0.1*mm" material="G4_Si" vis="SiVis"  />	
+        </layer>																                                 
+     </detector>
+   </detectors>
+
+    <readouts>
+        <readout name="TPCollection">
+            <id>system:5,side:2,layer:9,module:8,sensor:8</id>
+        </readout>
+    </readouts>
+
+    <!--
+    <plugins>
+        <plugin name="InstallSurfaceManager"/>
+    </plugins>
+-->
+
+ <fields>
+   <field type="solenoid" name="GlobalSolenoid" inner_field="BField_nominal"
+	  outer_field="-1.5*tesla" zmax="SolenoidField_zMax"
+	  inner_radius="SolenoidField_outer_radius"
+	  outer_radius="world_side" />
+ </fields> 
+
+</lccdd>
