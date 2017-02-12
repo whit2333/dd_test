@@ -113,6 +113,9 @@ static Ref_t create_element(LCDD& lcdd, xml_h e, SensitiveDetector sens)  {
       PlacedVolume pv = support_vol.placeVolume(sensor_vol, module_postion);
       pv.addPhysVolID("module", i_module );  
       sensDE.setPlacement( pv );
+      for(const auto& id : pv.volIDs()){
+        std::cout << " id : " << id.second << std::endl;
+      }
     }
   }
 
@@ -120,7 +123,7 @@ static Ref_t create_element(LCDD& lcdd, xml_h e, SensitiveDetector sens)  {
   
   Volume       mother    = lcdd.pickMotherVolume( tracker ) ;
   PlacedVolume mother_pv = mother.placeVolume(assembly);
-  mother_pv.addPhysVolID( "system", x_det.id() ).addPhysVolID("side",0 )  ;
+  mother_pv.addPhysVolID( "system", x_det.id() );
   tracker.setPlacement(mother_pv);
        
   assembly->GetShape()->ComputeBBox() ;

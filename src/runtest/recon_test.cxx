@@ -7,6 +7,7 @@
 #include "DD4hep/LCDD.h"
 #include "DD4hep/DD4hepUnits.h"
 #include "DD4hep/Objects.h"
+#include "DDG4/Geant4Data.h"
 // check directory
 #include <sys/stat.h>
 #include <TROOT.h>
@@ -14,6 +15,7 @@
 #include <TVector3.h>
 #include <TH1F.h>
 #include <TH2F.h>
+#include "TTree.h"
 #include "TMath.h"
 #include "time.h"
 #include <dirent.h>
@@ -22,26 +24,22 @@
 #include <map>
 
 void recon_test(
-    const char* DIRNAME            = "data/tests",
-    const char* result_file_prefix = "tests",
-    const char* compact_file       = "compact/simple_example.xml")
+    const char* file_name          = "simple_example_out.root",
+    const char* compact_file       = "compact/simple_example.xml"
+    )
 {
 
   using namespace DD4hep;
 
   DD4hep::Geometry::LCDD& lcdd = DD4hep::Geometry::LCDD::getInstance();
   lcdd.fromCompact(compact_file);
-  const double position[3]={0,0,0}; // position to calculate magnetic field at (the origin in this case)
-  double bField[3]={0,0,0}; 
+
+  // Magnetic Field
+  const double position[3] = {0,0,0};
+  double bField[3]         = {0,0,0}; 
   lcdd.field().magneticField(position,bField); 
   double _Bz = bField[2]/dd4hep::tesla; 
-
   std::cout << " Magnetic Field Bz = " << _Bz << std::endl;
-
-  TH1F * hR0   = new TH1F("hR0","R;R [mm];",100,0,1000);
-  TH1F * hZ0   = new TH1F("hZ0","Z;Z [mm];",100,-1000,1000);
-  TH2F * hZR0  = new TH2F("hZR0","ZR;Z [mm];R [mm];",100,-1000,1000,100,0,1000);
-
 
   //DD4hep::DDRec::SurfaceManager& surfMan = *lcdd.extension<DD4hep::DDRec::SurfaceManager>() ;
   //_map = surfMan.map( det.name() ) ;
@@ -54,12 +52,12 @@ void recon_test(
   DD4hep::Geometry::DetElement det = lcdd.detector( "TrackerPlanes" ) ;
   auto readout = lcdd.readout("TPCollection");
   auto seg     = readout.segmentation();
+  auto id      = readout.idSpec();
 
   std::cout << " num col " << readout.numCollections() << std::endl;
-  auto id      = readout.idSpec();
   //std::cout << "id encode " << id.encode({1,0,1,3,1,0,0}) << std::endl;
   std::cout << " id spec " << id.toString() << std::endl;
-  std::cout << " field " << id.fieldDescription() << std::endl;
+  std::cout << " field "  << id.fieldDescription() << std::endl;
   std::cout << " decoder " << id.decoder() << std::endl;
   auto bf = id.decoder();
   //std::cout << " barrel "   << bf->index("barrel")<<std::endl;
@@ -81,11 +79,46 @@ void recon_test(
 
   auto& id_decoder = DD4hep::DDRec::IDDecoder::getInstance();
 
-  TFile * f = new TFile("simple_example_out.root","READ");
+  TFile * f = new TFile(file_name, "READ");
   if(!f) { 
     std::cout << " root file not found\n";  
     exit -1;
   }
+  f->ls();
+  TTree * t = (TTree*)f->FindObjectAny("EVENT");
+  t->Print();
+
+  std::vector<DD4hep::Simulation::Geant4Tracker::Hit*> * TP_hits = nullptr;
+  t->SetBranchAddress("TPCollection",&TP_hits);
+
+  int nentries = t->GetEntries();
+
+  for(int i_event = 0; i_event < nentries; i_event++) {
+
+    t->GetEntry(i_event);
+    for(auto ahit : (*TP_hits)){
+
+      std::cout << " Cell ID               " << ahit->cellID << std::endl;
+      std::cout << " seg.type : " << seg.type() << std::endl;;
+
+      std::cout << " Cell ID from position " << id_decoder.cellID(ahit->position/10.0) << std::endl;;
+
+      std::cout << id_decoder.placement(ahit->cellID).toString() << std::endl;;
+      std::cout << id_decoder.detectorElement(ahit->cellID).path() << std::endl;;
+      std::cout << id_decoder.detectorElement(ahit->cellID).placementPath() << std::endl;;
+
+      std::cout << " Volume ID " << id_decoder.volumeID(ahit->cellID) << std::endl;
+
+      auto apos = id_decoder.position( ahit->cellID );
+
+      std::cout << " cell pos : x=" << apos.x() << ", y=" << apos.y() << ", z=" << apos.z() << std::endl;
+
+      //std::cout << ahit->length << std::endl;
+
+    }  
+
+  }
+
 
   //for(auto aFile : files) {
 

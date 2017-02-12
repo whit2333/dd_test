@@ -4,6 +4,7 @@ project(DerpLib CXX)
 
 # Add library source directory name that appear in ./src
 set(DerpLib_LIB_NAMES
+  simple_example
   DERP
   )
 
@@ -63,7 +64,7 @@ set(DerpLib_CXX_LDFLAGS "-L${CMAKE_INSTALL_PREFIX}/lib ${CMAKE_SHARED_LINKER_FLA
 set(DerpLib_CXX_INC_DIR "-I${CMAKE_INSTALL_PREFIX}/include/DerpLib "          CACHE PATH "include dir")
 set(DerpLib_CXX_LIBS    "" CACHE PATH "libraries")
 set(DerpLib_FC_FLAGS   "" CACHE PATH "fortran compile flags")
-set(DerpLib_DATA_DIR $ENV{JLAB_ROOT}/noarch/data CACHE PATH "data directory")
+set(DerpLib_DATA_DIR /noarch/data CACHE PATH "data directory")
 
 #set (DerpLib_COMPILER_FLAGS "-Wall")
 set(DerpLib_COMPILER_FLAGS   "-Wno-unused-variable -Wno-unused-parameter")
@@ -97,11 +98,6 @@ include_directories(APPEND ${PROJECT_BINARY_DIR})
 #----------------------------------------------------------------------------
 # Find Libraries
 
-FIND_PACKAGE( ILCUTIL REQUIRED COMPONENTS ILCSOFT_CMAKE_MODULES )
-
-# load default settings from ILCSOFT_CMAKE_MODULES
-INCLUDE( ilcsoft_default_settings )
-
 list(APPEND CMAKE_PREFIX_PATH $ENV{ROOTSYS})
 list(APPEND CMAKE_PREFIX_PATH $ENV{ROOTSYS}/etc/cmake)
 find_package(ROOT REQUIRED COMPONENTS MathCore RIO Hist MathMore Graf Graf3d
@@ -110,6 +106,12 @@ find_package(ROOT REQUIRED COMPONENTS MathCore RIO Hist MathMore Graf Graf3d
    Physics Spectrum Thread Tree TreeViewer)
 include(${ROOT_USE_FILE})
 include(cmake/root.cmake)
+
+FIND_PACKAGE( ILCUTIL REQUIRED COMPONENTS ILCSOFT_CMAKE_MODULES )
+
+# load default settings from ILCSOFT_CMAKE_MODULES
+INCLUDE( ilcsoft_default_settings )
+
 
 FIND_PACKAGE( LCIO ) #REQUIRED COMPONENTS DDRec 
 include_directories(${LCIO_INCLUDE_DIRS})
