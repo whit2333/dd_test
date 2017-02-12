@@ -78,16 +78,16 @@ void recon_test(
     for(auto ahit : (*TP_hits)){
 
       std::cout << " Cell ID               " << ahit->cellID << std::endl;
-      std::cout << " seg.type : " << seg.type() << std::endl;;
-
-      std::cout << " Cell ID from position " << id_decoder.cellID(ahit->position/10.0) << std::endl;;
+      //std::cout << " seg.type : " << seg.type() << std::endl; // crashes
+      //std::cout << " Cell ID from position " << id_decoder.cellID(ahit->position/10.0) << std::endl; //crashes
 
       std::cout << id_decoder.placement(ahit->cellID).toString() << std::endl;;
       std::cout << id_decoder.detectorElement(ahit->cellID).path() << std::endl;;
       std::cout << id_decoder.detectorElement(ahit->cellID).placementPath() << std::endl;;
 
-      std::cout << " Volume ID " << id_decoder.volumeID(ahit->cellID) << std::endl;
+      //std::cout << " Volume ID " << id_decoder.volumeID(ahit->cellID) << std::endl; // crashes
 
+      // The following crashes for unknown reasons... 
       auto apos = id_decoder.position( ahit->cellID );
 
       std::cout << " cell pos : x=" << apos.x() << ", y=" << apos.y() << ", z=" << apos.z() << std::endl;
