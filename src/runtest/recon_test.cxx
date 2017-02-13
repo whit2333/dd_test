@@ -79,6 +79,9 @@ void recon_test(
 
       std::cout << " ---------------------------------" << std::endl;
       std::cout << " Cell ID               " << ahit->cellID << std::endl;
+
+      // Adding segmentation to compact file fixes the crashes
+      
       //std::cout << " seg.type : " << seg.type() << std::endl; // crashes
       //std::cout << " Cell ID from position " << id_decoder.cellID(ahit->position/10.0) << std::endl; //crashes
 
@@ -89,7 +92,7 @@ void recon_test(
       //std::cout << " Volume ID " << id_decoder.volumeID(ahit->cellID) << std::endl; // crashes
 
       // The following crashes for unknown reasons... 
-      auto apos = id_decoder.position( ahit->cellID )*10.0;
+      auto apos = id_decoder.position( ahit->cellID )*10.0; // what is the deal with the units?
       std::cout << " hit pos  : x=" <<  ahit->position.x() << ", y=" << ahit->position.y() << ", z=" << ahit->position.z() << std::endl;
       std::cout << " cell pos : x=" << apos.x() << ", y=" << apos.y() << ", z=" << apos.z() << std::endl;
 
