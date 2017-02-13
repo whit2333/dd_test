@@ -81,11 +81,12 @@
      </detector>
    </detectors>
 
-    <readouts>
-        <readout name="TPCollection">
-            <id>system:5,layer:9,module:8</id>
-        </readout>
-    </readouts>
+   <readouts>
+     <readout name="TPCollection">
+       <segmentation type="CartesianGridXY" grid_size_x="10.0*cm" grid_size_y="10.0*cm" />
+       <id>system:5,layer:9,module:8,x:32:-16,y:-16</id>
+     </readout>
+   </readouts>
 
     <!--
     <plugins>
